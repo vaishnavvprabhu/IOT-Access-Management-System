@@ -30,7 +30,7 @@ from time import sleep
 
 import askName
 import askPurpose
-import FaceCamera as fc
+import FaceCamera
 
 # #Initialize 'currentname' to trigger only when a new person is identified.
 # currentname = "unknown"
@@ -68,10 +68,26 @@ try:
                 with open('name_purpose.txt', 'w') as file:
                     file.write(name)
                     file.write(purpose)
-
-            fc.camera(name)
             
+            def lookCamera():
+                UserVoiceRecognizer = sr.Recognizer()
+                
+                look = "Please look into the camera and smile"
+                audio = gTTS(text=look, lang="en", slow=False)
+                audio.save("lookMessage.mp3")
+                os.system("play lookMessage.mp3")
+            lookCamera()
             
+            FaceCamera.camera(name)
+            
+            def goodToGo():
+                UserVoiceRecognizer = sr.Recognizer()
+                
+                good = "Thank you! Please wait for sometime for the access approval"
+                audio = gTTS(text=good, lang="en", slow=False)
+                audio.save("goodMessage.mp3")
+                os.system("play goodMessage.mp3")
+            goodToGo()
             
             def entryAllowed():
                 UserVoiceRecognizer = sr.Recognizer()
