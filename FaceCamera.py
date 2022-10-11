@@ -19,7 +19,7 @@ import numpy as np #For converting Images to Numerical array
 import os #To handle directories 
 from PIL import Image #Pillow lib for handling images
 import time
-def camera(people_name):
+def camera(people_name, id):
     # labels = ["Vaishnav", "Elon Musk"]
     labels = ["Vaishnav"] 
     
@@ -31,11 +31,11 @@ def camera(people_name):
     # # Define the duration (in seconds) of the video capture here
     capture_duration = 10
  
-            
+ 
     # Define the codec and create VideoWriter object
     fourcc = cv2.VideoWriter_fourcc(*'XVID')
-    out = cv2.VideoWriter('%s.avi'%(people_name),fourcc, 20.0, (640,480))
-            
+    out = cv2.VideoWriter(f'{id}.avi',fourcc, 20.0, (640,480))
+    
     start_time = time.time()
     while( int(time.time() - start_time) < capture_duration ):
         ret, frame = cap.read() # Break video into frames

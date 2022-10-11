@@ -28,13 +28,14 @@ import os
 from picamera import PiCamera
 from time import sleep
 
-from tts_stt import ask_name, ask_purpose
-import FaceCamera as fc
+import askName
+import askPurpose
+import FaceCamera
 
-#Initialize 'currentname' to trigger only when a new person is identified.
-currentname = "unknown"
-#Determine faces from encodings.pickle file model created from train_model.py
-encodingsP = "encodings.pickle"
+# #Initialize 'currentname' to trigger only when a new person is identified.
+# currentname = "unknown"
+# #Determine faces from encodings.pickle file model created from train_model.py
+# encodingsP = "encodings.pickle"
 
 sensor = 16
 LED = 18
@@ -43,7 +44,7 @@ GPIO.setmode(GPIO.BOARD)
 GPIO.setup(sensor,GPIO.IN)
 GPIO.setup(LED,GPIO.OUT)
 
-GPIO.output(LED,True)
+GPIO.output(LED,False)
 print("IR Sensor Ready.....")
 print(" ")
 
@@ -59,16 +60,34 @@ try:
             #GPIO.output(LED, GPIO.HIGH)
             print("Object Detected")
  
-            name = ask_name()
-            purpose = ask_purpose()
 
-            with open('name_purpose.txt', 'w') as file:
-                file.write(name)
-                file.write(purpose)
+            if __name__ == "__main__":
+                name = askName.ask_name()
+                purpose = askPurpose.ask_purpose()
 
-            fc.camera(name)
+                with open('name_purpose.txt', 'w') as file:
+                    file.write(name)
+                    file.write(purpose)
             
+            def lookCamera():
+                UserVoiceRecognizer = sr.Recognizer()
+                
+                look = "Please look into the camera and smile"
+                audio = gTTS(text=look, lang="en", slow=False)
+                audio.save("lookMessage.mp3")
+                os.system("play lookMessage.mp3")
+            lookCamera()
             
+            FaceCamera.camera(name)
+            
+            def goodToGo():
+                UserVoiceRecognizer = sr.Recognizer()
+                
+                good = "Thank you! Please wait for sometime for the access approval"
+                audio = gTTS(text=good, lang="en", slow=False)
+                audio.save("goodMessage.mp3")
+                os.system("play goodMessage.mp3")
+            goodToGo()
             
             def entryAllowed():
                 UserVoiceRecognizer = sr.Recognizer()
@@ -92,6 +111,3 @@ try:
 except KeyboardInterrupt:
     GPIO.cleanup()
     
-
-
-
